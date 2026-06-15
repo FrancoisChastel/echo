@@ -1,0 +1,788 @@
+/* ============================================================
+   echo — sketch styles · v3 left-aligned + cinematic
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.film-page { background: var(--paper-bone); }
+
+a { color: inherit; text-decoration: none; }
+a:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+img, video { max-width: 100%; display: block; }
+
+/* ============================================================
+   layout primitives
+   ============================================================ */
+
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 var(--page-x);
+}
+
+.echo-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--echo);
+  z-index: 100;
+}
+
+/* ============================================================
+   site header & footer
+   ============================================================ */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: var(--s-5) 0 var(--s-3);
+  font-family: var(--mono);
+  font-size: var(--t-mono-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 250ms ease,
+    backdrop-filter 250ms ease,
+    -webkit-backdrop-filter 250ms ease,
+    padding-top 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    padding-bottom 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-bottom-color 250ms ease;
+}
+
+/* push down 3px on post/film so the echo hairline stays visible above */
+body.post .site-header,
+body.film .site-header { top: 3px; }
+
+/* state: scrolled past initial — translucent paper + soft blur */
+.site-header.is-scrolled {
+  background: color-mix(in oklch, var(--paper) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+          backdrop-filter: blur(10px) saturate(115%);
+  padding-top: var(--s-3);
+  padding-bottom: var(--s-2);
+  border-bottom-color: var(--rule);
+}
+
+/* film pages use bone paper for the scrolled background */
+body.film .site-header.is-scrolled {
+  background: color-mix(in oklch, var(--paper-bone) 88%, transparent);
+}
+
+/* state: hidden — slides up out of view */
+.site-header.is-hidden {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header.is-hidden { transform: none; }
+  .site-header { transition: background 250ms ease, border-bottom-color 250ms ease; }
+}
+
+.site-header .brand {
+  color: var(--ink);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.site-header nav { display: flex; gap: var(--s-3); }
+.site-header nav a { color: var(--mute); }
+.site-header nav a:hover { color: var(--ink); }
+
+.site-footer {
+  margin-top: var(--s-7);
+  padding: var(--s-3) 0 var(--s-5);
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   homepage — loose-only list
+   ============================================================ */
+
+.home {
+  max-width: var(--col-narrow);
+  margin: var(--s-5) auto 0;
+}
+
+.section-caption {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--s-5);
+}
+
+.loose-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.loose-item { display: block; color: inherit; }
+
+.loose-item .meta {
+  font-family: var(--mono);
+  font-size: var(--t-mono-xs);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: var(--s-1);
+}
+
+.loose-item .title {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin: 0 0 var(--s-1);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+}
+
+.loose-item .summary {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--mute);
+  margin: 0;
+  max-width: 56ch;
+  line-height: 1.55;
+}
+
+.earlier-link {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin: var(--s-6) 0 0;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+}
+.earlier-link a { color: var(--mute); transition: color 200ms ease; }
+.earlier-link a:hover { color: var(--echo); }
+
+/* ============================================================
+   post page — left-aligned declarative
+   ============================================================ */
+
+.post {
+  max-width: var(--col-narrow);
+  margin: var(--s-6) auto 0;
+}
+
+.post-crumb {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--s-4);
+}
+
+.post-title {
+  font-family: var(--serif);
+  font-size: var(--t-h1);
+  font-weight: 400;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.015em;
+  margin: 0 0 var(--s-3);
+  max-width: 22ch;       /* lets long titles wrap naturally */
+}
+
+.post-lead {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--s-6);
+}
+.post-lead .echo-dot {
+  color: var(--echo);
+  margin: 0 0.4em;
+  font-weight: 600;
+}
+
+.post-body p { margin: 0 0 var(--s-3); }
+
+.post-body h2 {
+  font-family: var(--serif);
+  font-size: var(--t-h2);
+  font-weight: 400;
+  margin: var(--s-5) 0 var(--s-2);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.005em;
+}
+
+.post-body em { font-style: italic; }
+.post-body strong { font-weight: 500; }
+
+.post-body blockquote {
+  margin: var(--s-4) 0;
+  padding-left: var(--s-3);
+  border-left: 2px solid var(--echo);
+  color: var(--ink);
+  font-style: italic;
+  font-size: 1.08rem;
+  max-width: 50ch;
+}
+
+.post-body hr {
+  border: none;
+  margin: var(--s-5) 0;
+  height: 1em;
+}
+.post-body hr::before {
+  content: '— · —';
+  color: var(--mute-2);
+  letter-spacing: 0.4em;
+}
+
+.echo-name {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin-top: var(--s-6);
+}
+.echo-name::before {
+  content: '— ';
+  color: var(--echo);
+}
+.echo-name .name { color: var(--echo); }
+
+/* ============================================================
+   film page — full-bleed video first, then text
+   ============================================================ */
+
+.film-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: var(--s-4);
+}
+
+.film-frame {
+  aspect-ratio: 16/9;
+  background:
+    radial-gradient(ellipse at 30% 40%, oklch(40% 0.06 200) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 60%, oklch(28% 0.04 240) 0%, transparent 60%),
+    linear-gradient(135deg, oklch(28% 0.04 220) 0%, oklch(15% 0.02 240) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: oklch(85% 0 0);
+  font-size: 2.2rem;
+  width: 100%;
+  position: relative;
+}
+.film-frame::after { content: '▶'; opacity: 0.35; }
+
+.film-text {
+  max-width: var(--col-narrow);
+  margin: var(--s-5) auto 0;
+}
+
+.film-crumb {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--s-3);
+}
+
+.film-title {
+  font-family: var(--serif);
+  font-size: var(--t-h1);
+  font-weight: 400;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.015em;
+  margin: 0 0 var(--s-2);
+  max-width: 22ch;
+}
+
+.film-meta {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--s-5);
+}
+.film-meta .echo-dot {
+  color: var(--echo);
+  margin: 0 0.4em;
+  font-weight: 600;
+}
+
+.film-body p { margin: 0 0 var(--s-3); }
+
+/* ============================================================
+   responsive
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .site-header { flex-direction: column; gap: var(--s-2); align-items: flex-start; }
+  .loose-item .title { font-size: 1.4rem; }
+}
+
+/* ============================================================
+   motion + texture layer (compositor only · reduced-motion safe)
+   ============================================================ */
+
+/* paper grain */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 200;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+@keyframes echo-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .site-header { animation: echo-rise 600ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+  main         { animation: echo-rise 700ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 100ms; }
+  .site-footer { animation: echo-rise 500ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 220ms; }
+}
+
+@keyframes echo-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.echo-bar { transform-origin: left; }
+@media (prefers-reduced-motion: no-preference) {
+  .echo-bar {
+    animation: echo-draw 850ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 150ms;
+  }
+}
+
+/* hover micro-interactions */
+.loose-item .title {
+  transition: color 200ms ease, transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.loose-item .meta::before {
+  content: '·';
+  color: var(--echo);
+  font-weight: 600;
+  display: inline-block;
+  margin-right: 0.4em;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 380ms ease, transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .loose-item:hover .title { color: var(--echo); transform: translateX(4px); }
+  .loose-item:hover .meta::before { opacity: 1; transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loose-item:hover .title { color: var(--echo); }
+  .loose-item:hover .meta::before { opacity: 1; transform: none; }
+}
+
+/* body link underline animation */
+.post-body a:not([href^="#"]),
+.film-body a {
+  background: linear-gradient(currentColor, currentColor) bottom left / 0 1px no-repeat;
+  padding-bottom: 1px;
+  transition: background-size 400ms cubic-bezier(0.16, 1, 0.3, 1), color 200ms ease;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .post-body a:not([href^="#"]):hover,
+  .film-body a:hover {
+    background-size: 100% 1px;
+    color: var(--echo);
+  }
+}
+
+/* brand mark — small colored · before "echo" */
+.site-header .brand::before {
+  content: '·';
+  color: var(--echo);
+  font-weight: 700;
+  margin-right: 0.55em;
+  display: inline-block;
+  transition: color 300ms ease;
+}
+
+/* ============================================================
+   phase 3.2 — second motion pass (subtle)
+   adds: staggered list entry, title settle, read progress,
+   echo-name hover reveal, video reveal on film page.
+   ============================================================ */
+
+/* --- main bulk-fade is disabled on content pages -----------
+   Per-element reveal (phase 3.3, below) handles entry instead.
+   Header + footer keep their own entry rise. */
+body.home main,
+body.post main,
+body.film main { animation: none; }
+
+/* --- title settle (post + film) ---------------------------- */
+/* title appears at slightly open letter-spacing, settles
+   into the static tight value over ~800ms. barely perceptible,
+   adds a "landing" feeling. */
+@keyframes title-settle {
+  from { letter-spacing: 0.012em; }
+  to   { letter-spacing: -0.015em; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* two stacked animations: letter-spacing settle + color trace */
+  .post-title,
+  .film-title {
+    animation:
+      title-settle 800ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both,
+      title-color 1300ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+  }
+}
+
+/* title appears in the per-post echo color, settles to ink */
+@keyframes title-color {
+  from { color: var(--echo); }
+  to   { color: var(--ink); }
+}
+
+/* --- read progress at the bottom edge (post + film) ------- */
+/* thin 2px line, echo color, fills 0 → 100% as you scroll.
+   no rail — subtle by design. driven by --read CSS var,
+   updated from progress.js. */
+.read-progress {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  pointer-events: none;
+  z-index: 99;
+  transform-origin: left;
+  transform: scaleX(var(--read, 0));
+  background: var(--echo);
+  transition: transform 80ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .read-progress { display: none; }
+}
+
+/* --- echo name hover: reveals the oklch value -------------- */
+/* easter egg — the color name at the foot of post/film
+   shows its oklch value on hover. quiet, discoverable. */
+.echo-name {
+  position: relative;
+  cursor: help;
+  display: inline-block;
+}
+
+.echo-name::after {
+  content: attr(data-oklch);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  margin-left: 1em;
+  transform: translate(-6px, -50%);
+  white-space: nowrap;
+  color: var(--mute-2);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transition: opacity 280ms ease,
+              transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .echo-name:hover::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .echo-name:hover::after { opacity: 1; }
+}
+
+/* --- film-bleed letterbox reveal --------------------------- */
+/* video appears as if a horizontal curtain were opening from
+   the center. clip-path is compositor-friendly. */
+@keyframes letterbox-open {
+  from { clip-path: inset(50% 0 50% 0); opacity: 0.6; }
+  to   { clip-path: inset(0 0 0 0);     opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .film-bleed {
+    animation: letterbox-open 1100ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+  }
+}
+
+/* ============================================================
+   phase 3.3 — scroll-reveal layer
+   IntersectionObserver-driven (reveal.js) fade-up for body
+   content and list items. Above-fold content reveals on load
+   with a JS-side stagger; below-fold content reveals as it
+   crosses into view.
+   ============================================================ */
+
+/* quick intro for the post/film header trio
+   (crumb, then title settle takes care of itself, then lead) */
+@media (prefers-reduced-motion: no-preference) {
+  .post-crumb,
+  .film-crumb {
+    animation: echo-rise 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 50ms;
+  }
+  .post-lead {
+    animation: echo-rise 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 260ms;
+  }
+  /* film-meta gets its own typewriter — see "phase 3.6" below */
+}
+
+/* reveal pattern — JS applies `.reveal` then `.revealed` */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* once revealed, drop will-change so the compositor can rest */
+.reveal.revealed { will-change: auto; }
+
+/* blockquotes get an extra horizontal slide for character */
+.post-body > blockquote.reveal {
+  transform: translateY(14px) translateX(-8px);
+}
+.post-body > blockquote.reveal.revealed {
+  transform: translateY(0) translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ============================================================
+   phase 3.5 — post + film distinctive animations
+   ============================================================ */
+
+/* --- HR section break: dots spread when scroll-revealed --- */
+/* the · · · start tight and at 0 opacity, expand into their
+   full letter-spacing as the hr enters view. */
+@keyframes hr-spread {
+  from { letter-spacing: 0;     opacity: 0; }
+  to   { letter-spacing: 0.5em; opacity: 1; }
+}
+
+/* before reveal: hidden / tight */
+.post-body hr.reveal::before {
+  display: inline-block;
+  letter-spacing: 0;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .post-body hr.reveal.revealed::before {
+    animation: hr-spread 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-body hr.reveal::before {
+    letter-spacing: 0.5em;
+    opacity: 1;
+  }
+}
+
+/* --- echo name foot: slower, more intentional reveal --- */
+/* the closing signature ("— terracotta") gets a longer fade
+   so the page exhales rather than punctuates. */
+.echo-name.reveal {
+  transition-duration: 1100ms;
+}
+
+/* --- film: vertical thread line from video down to title --- */
+/* 1px line in the per-post echo color, draws downward
+   ~1.2s after the letterbox finishes opening. */
+.film-thread {
+  width: 1px;
+  height: var(--s-6);
+  background: var(--echo);
+  opacity: 0.55;
+  margin: 0 auto;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+@keyframes thread-draw {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .film-thread {
+    animation: thread-draw 900ms cubic-bezier(0.16, 1, 0.3, 1) 1200ms both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film-thread { transform: scaleY(1); }
+}
+
+/* ============================================================
+   phase 3.6 — film page: video-related cinema motion
+   ============================================================ */
+
+/* --- echo-color vignette inside the video frame ---
+   the film's color "lives" inside the frame — a soft radial
+   bloom in the per-post echo color radiates from the edges
+   inward, fading toward the center. fires after the
+   letterbox has fully opened. */
+.film-frame {
+  position: relative;
+  isolation: isolate;
+}
+
+.film-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 45%,
+    color-mix(in oklch, var(--echo) 28%, transparent) 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+@keyframes color-bleed {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .film-frame::after {
+    animation: color-bleed 1.6s cubic-bezier(0.16, 1, 0.3, 1) 1.3s both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film-frame::after { opacity: 1; }
+}
+
+/* --- film meta typewriter ---
+   the date · runtime · dimensions line reveals character-by
+   -character via clip-path with steps() easing. reads like a
+   film title card being typed in front of you. */
+@keyframes typewriter {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .film-meta {
+    display: inline-block;
+    clip-path: inset(0 100% 0 0);
+    animation: typewriter 1.4s steps(30, end) 1.3s both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film-meta { clip-path: none; }
+}
+
+/* --- scroll-driven slow zoom on the video ---
+   as the frame moves through the viewport, it grows from
+   scale(1) to scale(1.04). very slow cinematic push-in,
+   tied to scroll position not time. modern CSS — falls back
+   gracefully where unsupported. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .film-frame {
+      animation: scroll-push linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    @keyframes scroll-push {
+      from { transform: scale(1); }
+      to   { transform: scale(1.04); }
+    }
+  }
+}
+
+/* ============================================================
+   about — homepage tail block
+   ============================================================ */
+
+.about {
+  margin: var(--s-6) 0 0;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+  max-width: var(--col-narrow);
+}
+.about .section-caption { margin-bottom: var(--s-3); }
+.about-body {
+  font-family: var(--serif);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  margin: 0 0 var(--s-2);
+}
+.about-body a {
+  color: var(--mute);
+  border-bottom: 1px solid var(--rule);
+  transition: color 200ms ease, border-color 200ms ease;
+}
+.about-body a:hover {
+  color: var(--echo);
+  border-color: var(--echo);
+}

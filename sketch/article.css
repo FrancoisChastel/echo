@@ -1,0 +1,755 @@
+/* ============================================================
+   echo — article.css
+   rich article system: § segments (code / research / philosophy),
+   code blocks, charts, figures, callouts, sidenotes, footnotes,
+   table of contents.
+   Loaded *after* tokens.css + styles.css; extends them.
+   ============================================================ */
+
+/* ============================================================
+   mode palette — three voices for one essay
+   each segment inherits --mode + --mode-tint so every component
+   inside (callouts, blockquotes, dividers, refs) auto-adapts.
+   ============================================================ */
+
+body.article {
+  --mode-code:         oklch(54% 0.10 232);  /* steel blue */
+  --mode-code-tint:    oklch(97% 0.012 232);
+  --mode-research:     oklch(58% 0.13 70);   /* ochre */
+  --mode-research-tint:oklch(97% 0.018 70);
+  --mode-phil:         oklch(50% 0.12 350);  /* plum */
+  --mode-phil-tint:    oklch(97% 0.015 350);
+
+  /* article inherits the page's --echo unless a segment overrides */
+  --mode: var(--echo);
+  --mode-tint: color-mix(in oklch, var(--echo) 8%, transparent);
+}
+
+.seg-code        { --mode: var(--mode-code);     --mode-tint: var(--mode-code-tint); }
+.seg-research    { --mode: var(--mode-research); --mode-tint: var(--mode-research-tint); }
+.seg-philosophy  { --mode: var(--mode-phil);     --mode-tint: var(--mode-phil-tint); }
+
+/* ============================================================
+   article shell + the optional left TOC rail
+   ============================================================ */
+
+.article-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: var(--s-6) auto 0;
+  max-width: var(--page-max);
+  gap: var(--s-4);
+}
+
+@media (min-width: 1100px) {
+  .article-shell {
+    grid-template-columns: 12rem minmax(0, 38rem) 14rem;
+    gap: var(--s-5);
+    justify-content: center;
+  }
+}
+
+/* ----- TOC ------------------------------------------------ */
+
+.toc {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  letter-spacing: 0.04em;
+  color: var(--mute);
+  position: sticky;
+  top: var(--s-7);
+  align-self: start;
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .toc { display: block; }
+}
+
+.toc-label {
+  text-transform: lowercase;
+  color: var(--mute-2);
+  letter-spacing: 0.18em;
+  margin: 0 0 var(--s-3);
+  font-size: 10px;
+}
+
+.toc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.toc a {
+  display: grid;
+  grid-template-columns: 1ch 1fr;
+  gap: 0.7rem;
+  align-items: baseline;
+  color: var(--mute);
+  transition: color 240ms ease, transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  line-height: 1.4;
+}
+
+.toc a .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  display: inline-block;
+  align-self: center;
+  transition: opacity 240ms ease, transform 240ms ease, background 240ms ease;
+}
+
+.toc li[data-mode="code"]     a { --tm: var(--mode-code); }
+.toc li[data-mode="research"] a { --tm: var(--mode-research); }
+.toc li[data-mode="philosophy"] a { --tm: var(--mode-phil); }
+
+.toc a:hover,
+.toc a.active {
+  color: var(--ink);
+}
+.toc a:hover .dot,
+.toc a.active .dot {
+  background: var(--tm, var(--echo));
+  opacity: 1;
+  transform: scale(1.5);
+}
+.toc a.active { transform: translateX(3px); }
+
+.toc-num {
+  color: var(--mute-2);
+  font-feature-settings: 'tnum';
+  letter-spacing: 0.02em;
+}
+
+/* ----- main column + sidenote rail --------------------------- */
+
+.article-body { min-width: 0; }
+
+.sidenote-rail {
+  display: none;
+  position: relative;
+}
+@media (min-width: 1100px) {
+  .sidenote-rail { display: block; }
+}
+
+/* ============================================================
+   article header (title block)
+   ============================================================ */
+
+.article-head {
+  border-top: 1px solid var(--ink);
+  padding-top: var(--s-3);
+  margin-bottom: var(--s-6);
+}
+
+.article-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--s-4);
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.article-meta-row .num {
+  color: var(--echo);
+  font-weight: 600;
+}
+
+.article-title {
+  font-family: var(--serif);
+  font-size: clamp(2.6rem, 1.9rem + 2.8vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.018em;
+  margin: 0 0 var(--s-3);
+  max-width: 18ch;
+}
+.article-subtitle {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.35rem);
+  color: var(--ink);
+  margin: 0 0 var(--s-4);
+  max-width: 38ch;
+  line-height: 1.4;
+  font-weight: 400;
+}
+.article-byline {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+.article-byline .echo-dot {
+  color: var(--echo);
+  font-weight: 600;
+}
+
+/* ============================================================
+   § section markers — the rhythm of the piece
+   ============================================================ */
+
+.seg {
+  position: relative;
+  padding-top: var(--s-6);
+  margin-top: var(--s-5);
+  scroll-margin-top: 6rem;
+}
+
+.seg-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--s-3);
+  row-gap: 0.15rem;
+  align-items: baseline;
+  margin: 0 0 var(--s-4);
+  padding-top: var(--s-3);
+  position: relative;
+}
+
+/* the hairline above each segment — short, in the mode color */
+.seg-head::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4rem;
+  height: 2px;
+  background: var(--mode);
+}
+
+.seg-num {
+  font-family: var(--mono);
+  font-size: var(--t-mono-md);
+  color: var(--mute-2);
+  letter-spacing: 0.04em;
+  margin: 0;
+  font-feature-settings: 'tnum';
+  grid-column: 1;
+  grid-row: 1;
+}
+.seg-mode {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  text-transform: lowercase;
+  letter-spacing: 0.22em;
+  color: var(--mode);
+  margin: 0;
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+}
+.seg-title {
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 1.4rem + 1.1vw, 2.2rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  margin: 0;
+  max-width: 22ch;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin-top: var(--s-2);
+}
+
+.seg p { margin: 0 0 var(--s-3); max-width: 38rem; }
+.seg h3 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.25rem;
+  margin: var(--s-4) 0 var(--s-2);
+  max-width: 38rem;
+}
+
+/* the leading drop-cap for each segment — first letter only */
+.seg > .seg-body > p:first-of-type::first-letter {
+  font-family: var(--serif);
+  font-size: 3.1em;
+  float: left;
+  line-height: 0.85;
+  padding-right: 0.12em;
+  padding-top: 0.08em;
+  color: var(--mode);
+  font-weight: 500;
+}
+
+/* ============================================================
+   code block
+   ============================================================ */
+
+.code-block {
+  margin: var(--s-4) 0;
+  background: oklch(18% 0.01 240);
+  color: oklch(88% 0.005 240);
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.55;
+  position: relative;
+  overflow: hidden;
+  border-left: 2px solid var(--mode);
+}
+
+.code-block header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid oklch(28% 0.01 240);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: lowercase;
+  color: oklch(65% 0.02 240);
+}
+.code-block .lang { color: var(--mode); }
+.code-block .copy {
+  background: transparent;
+  border: 1px solid oklch(35% 0.01 240);
+  color: oklch(75% 0 0);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  padding: 0.15rem 0.55rem;
+  cursor: pointer;
+  border-radius: 1px;
+  text-transform: lowercase;
+  transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+.code-block .copy:hover { color: var(--paper); border-color: var(--mode); }
+.code-block .copy.copied { color: var(--mode); border-color: var(--mode); }
+
+.code-block pre {
+  margin: 0;
+  padding: 1rem 0.9rem 1.1rem;
+  overflow-x: auto;
+  counter-reset: ln;
+}
+.code-block pre code {
+  display: block;
+  font-family: inherit;
+  white-space: pre;
+}
+.code-block .ln {
+  display: inline-block;
+  width: 2rem;
+  color: oklch(40% 0.005 240);
+  text-align: right;
+  margin-right: 1rem;
+  user-select: none;
+  font-feature-settings: 'tnum';
+}
+
+.code-block figcaption {
+  padding: 0.4rem 0.9rem 0.7rem;
+  font-size: 10.5px;
+  color: oklch(60% 0.005 240);
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+/* tokens — hand-applied via spans */
+.tok-kw      { color: oklch(72% 0.13 295); }   /* keyword */
+.tok-str     { color: oklch(75% 0.13 145); }   /* string  */
+.tok-num     { color: oklch(78% 0.12 70); }    /* number  */
+.tok-fn      { color: oklch(78% 0.13 220); }   /* function */
+.tok-com     { color: oklch(45% 0.01 240); font-style: italic; }
+.tok-typ     { color: oklch(78% 0.12 180); }   /* type */
+.tok-pun     { color: oklch(70% 0.005 240); }
+.tok-attr    { color: oklch(72% 0.10 30); }
+
+/* inline code in prose */
+.seg-body code, .post-body code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  background: var(--mode-tint, oklch(94% 0 0));
+  padding: 0.1em 0.4em;
+  border-radius: 1px;
+  letter-spacing: 0;
+  color: var(--ink);
+  border-bottom: 1px solid color-mix(in oklch, var(--mode) 30%, transparent);
+}
+
+/* ============================================================
+   charts — bar + line, CSS only
+   ============================================================ */
+
+.chart {
+  margin: var(--s-4) 0;
+  font-family: var(--mono);
+}
+
+.chart-bar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.chart-bar ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.chart-bar li {
+  display: grid;
+  grid-template-columns: 13ch 1fr 5ch;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--mute);
+}
+.chart-bar .label { text-align: right; color: var(--ink); }
+.chart-bar .bar {
+  height: 8px;
+  background: var(--mode-tint);
+  position: relative;
+  overflow: hidden;
+}
+.chart-bar .bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: calc(var(--v, 0) * 100%);
+  background: var(--mode);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.chart-bar.revealed .bar::after { transform: scaleX(1); }
+.chart-bar .value {
+  color: var(--mode);
+  font-feature-settings: 'tnum';
+  text-align: right;
+}
+
+/* a tiny SVG line/area chart inside <figure class="chart chart-line"> */
+.chart-line svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.chart-line .axis { stroke: var(--rule); stroke-width: 1; }
+.chart-line .tick { font-family: var(--mono); font-size: 9px; fill: var(--mute-2); }
+.chart-line .area { fill: var(--mode-tint); opacity: 0.9; }
+.chart-line .line {
+  fill: none;
+  stroke: var(--mode);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 1600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.chart-line.revealed .line { stroke-dashoffset: 0; }
+.chart-line .pt {
+  fill: var(--paper);
+  stroke: var(--mode);
+  stroke-width: 1.2;
+}
+
+.chart figcaption,
+.fig figcaption {
+  margin-top: 0.7rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--mute);
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  max-width: 38rem;
+}
+.chart figcaption .fig-n,
+.fig figcaption .fig-n {
+  color: var(--mode);
+  margin-right: 0.5em;
+  font-weight: 500;
+}
+.chart figcaption .src,
+.fig figcaption .src {
+  color: var(--mute-2);
+  margin-left: 0.6em;
+}
+
+/* ============================================================
+   figure (illustration / image / svg)
+   ============================================================ */
+
+.fig {
+  margin: var(--s-4) 0;
+}
+.fig-frame {
+  background: var(--mode-tint);
+  border: 1px solid color-mix(in oklch, var(--mode) 20%, transparent);
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mode);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  position: relative;
+  overflow: hidden;
+}
+.fig-frame svg { width: 80%; height: 80%; }
+
+/* a "data sheet" composition we'll use once */
+.fig-sheet {
+  background: var(--mode-tint);
+  padding: var(--s-3);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-3);
+  border: 1px solid color-mix(in oklch, var(--mode) 18%, transparent);
+}
+.fig-sheet dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  color: var(--mode);
+  margin: 0 0 0.3rem;
+}
+.fig-sheet dd {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  margin: 0;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  font-feature-settings: 'tnum';
+}
+.fig-sheet dd .unit {
+  font-size: 0.8rem;
+  color: var(--mute);
+  font-family: var(--mono);
+  margin-left: 0.25em;
+}
+@media (max-width: 640px) {
+  .fig-sheet { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   callouts — case studies / highlights / asides
+   ============================================================ */
+
+.callout {
+  margin: var(--s-4) 0;
+  padding: var(--s-3) var(--s-3) var(--s-3) calc(var(--s-3) - 2px);
+  border-left: 2px solid var(--mode);
+  background: var(--mode-tint);
+  position: relative;
+}
+.callout-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: lowercase;
+  letter-spacing: 0.22em;
+  color: var(--mode);
+  margin: 0 0 var(--s-1);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.callout-label::before {
+  content: '';
+  width: 0.55rem;
+  height: 1px;
+  background: var(--mode);
+}
+.callout p { margin: 0 0 var(--s-1); max-width: none; }
+.callout p:last-child { margin: 0; }
+.callout strong { font-weight: 500; color: var(--ink); }
+
+.callout-quote {
+  border-left: none;
+  background: transparent;
+  padding-left: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.4rem;
+  line-height: 1.35;
+  color: var(--ink);
+  max-width: 32ch;
+  margin: var(--s-5) 0;
+  position: relative;
+}
+.callout-quote::before {
+  content: '"';
+  position: absolute;
+  left: -0.6em;
+  top: -0.15em;
+  font-family: var(--serif);
+  font-size: 3rem;
+  color: var(--mode);
+  line-height: 1;
+}
+.callout-quote .attr {
+  display: block;
+  margin-top: var(--s-2);
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--mute);
+  text-transform: lowercase;
+}
+.callout-quote .attr::before { content: '— '; color: var(--mode); }
+
+/* ============================================================
+   sidenotes & footnotes
+   reference numbers in text → small superscript;
+   the note itself either floats in the margin rail (desktop)
+   or expands inline (mobile, via <details>).
+   ============================================================ */
+
+/* the in-text reference number */
+.ref {
+  font-family: var(--mono);
+  font-size: 0.7em;
+  vertical-align: super;
+  color: var(--mode);
+  font-weight: 600;
+  padding: 0 0.15em;
+  cursor: pointer;
+  border-bottom: 1px dotted var(--mode);
+  text-decoration: none;
+  line-height: 1;
+}
+.ref:hover { color: var(--ink); background: var(--mode-tint); }
+
+/* a Tufte-style sidenote — author wraps inline content
+   inside <aside class="sidenote" data-num="1"> */
+.sidenote {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--mute);
+  margin: var(--s-2) 0;
+  padding: 0.4rem 0 0.4rem 0.75rem;
+  border-left: 1px solid var(--mode);
+  letter-spacing: 0.01em;
+  max-width: 38rem;
+}
+.sidenote::before {
+  content: attr(data-num);
+  color: var(--mode);
+  font-weight: 600;
+  margin-right: 0.5em;
+}
+
+@media (min-width: 1100px) {
+  /* on wide screens, lift sidenotes into the right rail */
+  .seg-body { position: relative; }
+  .sidenote {
+    position: absolute;
+    right: -16rem;
+    width: 13rem;
+    margin: 0;
+    padding: 0 0 0 0.7rem;
+    border-left: 1px solid var(--mode);
+    font-size: 11px;
+  }
+}
+
+/* footnotes / references block at the end */
+.references {
+  margin: var(--s-7) 0 0;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+}
+.references h3 {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: lowercase;
+  letter-spacing: 0.22em;
+  color: var(--mute);
+  margin: 0 0 var(--s-3);
+}
+.references ol {
+  list-style: none;
+  counter-reset: ref;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.references li {
+  counter-increment: ref;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--mute);
+  line-height: 1.55;
+  padding-left: 2rem;
+  position: relative;
+  letter-spacing: 0.02em;
+}
+.references li::before {
+  content: counter(ref);
+  position: absolute;
+  left: 0;
+  color: var(--echo);
+  font-weight: 600;
+  font-feature-settings: 'tnum';
+}
+.references a { color: var(--ink); border-bottom: 1px solid var(--rule); }
+.references a:hover { color: var(--echo); border-color: var(--echo); }
+.references li.is-target { color: var(--ink); }
+.references li.is-target::before { color: var(--mode, var(--echo)); }
+
+/* ============================================================
+   inter-segment divider — three dots in mode color of the
+   segment you're leaving
+   ============================================================ */
+
+.seg-divider {
+  text-align: center;
+  margin: var(--s-6) 0;
+  color: var(--mode);
+  letter-spacing: 0.7em;
+  font-size: 14px;
+  opacity: 0.7;
+}
+.seg-divider::before { content: '· · ·'; }
+
+/* ============================================================
+   reveals — extend the existing .reveal class for charts
+   ============================================================ */
+
+.chart.reveal { opacity: 0; transform: translateY(14px); transition: opacity 650ms cubic-bezier(0.16, 1, 0.3, 1), transform 650ms cubic-bezier(0.16, 1, 0.3, 1); }
+.chart.reveal.revealed { opacity: 1; transform: translateY(0); }
+
+/* ============================================================
+   responsive
+   ============================================================ */
+
+@media (max-width: 700px) {
+  .article-title { max-width: none; }
+  .seg-title { max-width: none; }
+  .seg-head::before { width: 3rem; }
+}
+
+@media (max-width: 480px) {
+  .code-block { font-size: 12px; }
+  .code-block .ln { display: none; }
+  .chart-bar li { grid-template-columns: 10ch 1fr 4ch; }
+}

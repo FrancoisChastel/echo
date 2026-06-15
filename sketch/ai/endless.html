@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>The Endless Echo — ai · echo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../tokens.css?v=10">
+  <link rel="stylesheet" href="../styles.css?v=10">
+  <link rel="stylesheet" href="demo.css?v=2">
+
+  <style>
+    :root { --echo: oklch(60% 0.18 30); }
+
+    /* depth indicator pinned bottom-right */
+    .endless-status {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: oklch(20% 0 0);
+      color: oklch(85% 0 0);
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 0.4rem 0.75rem;
+      letter-spacing: 0.05em;
+      z-index: 210;
+      display: flex;
+      gap: 0.75rem;
+      align-items: baseline;
+    }
+    .endless-status .calls {
+      color: var(--echo);
+      font-weight: 600;
+    }
+    .endless-status .help {
+      color: oklch(60% 0 0);
+      font-size: 9px;
+    }
+
+    /* deeper markers — fainter, more spaced */
+    .ai-marker.deep {
+      color: var(--mute-2);
+      letter-spacing: 0.3em;
+    }
+    .ai-marker.deep .dot { color: var(--echo); }
+
+    /* default endless paragraph */
+    .endless-body p {
+      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* writing state — blinking echo-color caret while typing */
+    .endless-body p.writing::after {
+      content: "▋";
+      color: var(--echo);
+      margin-left: 0.1em;
+      font-weight: 100;
+      animation: caret-blink 720ms steps(2) infinite;
+    }
+    @keyframes caret-blink {
+      50% { opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .endless-body p.writing::after { animation: none; }
+    }
+
+    /* depth treatments — all derived from the locked design language */
+
+    /* spaced concrete poetry: lowercase, mono, very wide letter-spacing */
+    .endless-body .deep-spaced {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      letter-spacing: 0.8em;
+      text-align: center;
+      color: var(--mute);
+      margin: var(--s-3) auto;
+      text-transform: lowercase;
+    }
+
+    /* system brackets */
+    .endless-body .deep-bracket {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-align: center;
+      color: var(--mute-2);
+      margin: var(--s-3) 0;
+    }
+
+    /* coordinates / time-stamps */
+    .endless-body .deep-coord {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      color: var(--mute);
+      text-align: center;
+      margin: var(--s-2) 0;
+    }
+
+    /* found phrases — italic serif, like an archive label */
+    .endless-body .deep-found {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.92rem;
+      color: var(--mute);
+      text-align: center;
+      margin: var(--s-3) 0;
+    }
+
+    /* search-query echoes */
+    .endless-body .deep-query {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--echo);
+      letter-spacing: 0.05em;
+      text-align: center;
+      margin: var(--s-3) 0;
+    }
+
+    /* glitched — corpus sentence with chars dropped */
+    .endless-body .deep-glitch {
+      font-family: var(--serif);
+      color: var(--mute-2);
+      letter-spacing: 0.02em;
+    }
+
+    /* reversed sentences */
+    .endless-body .deep-reversed {
+      font-family: var(--serif);
+      color: var(--mute);
+      letter-spacing: 0.02em;
+      font-size: 0.95rem;
+    }
+
+    /* single character — large, lots of space around */
+    .endless-body .deep-char {
+      font-family: var(--serif);
+      font-size: 2.2rem;
+      text-align: center;
+      color: var(--echo);
+      letter-spacing: 1em;
+      margin: var(--s-5) auto;
+    }
+  </style>
+</head>
+<body class="post">
+
+<div class="echo-bar"></div>
+
+<div class="page">
+
+  <header class="site-header">
+    <a class="brand" href="../index.html">echo · françois chastel</a>
+    <nav>
+      <a href="#about">about</a>
+      <a href="#rss">rss</a>
+      <a href="#feed">json</a>
+      <a href="#llms">llms</a>
+    </nav>
+  </header>
+
+  <article class="post" data-category="philosophical-slowness">
+
+    <p class="post-crumb">echo / essays / <a href="index.html" style="color:inherit;">ai demo</a> — the endless echo</p>
+
+    <h1 class="post-title">On slowness</h1>
+
+    <p class="post-lead">
+      2026.05.27 <span class="echo-dot">·</span> 1,200 words <span class="echo-dot">·</span> 6 min <span class="echo-dot">·</span> attention · craft
+    </p>
+
+    <div class="post-body">
+
+      <p>There is a particular pleasure in doing one thing slowly when the world is fast — not as a protest, exactly, but as a counterweight. The pleasure isn't the slowness itself. It's the noticing it permits.</p>
+
+      <p>When I watch a film at 1.5× speed, I can tell you what happens. I can't tell you how it felt, because feeling needs a tempo. The actors' breath, the silence after a line, the small adjustment of a hand on a table — these are the places a film actually lives.</p>
+
+      <p>If you read this far slowly, the essay was for you. If you skimmed, it was also for you — but for a different reason, and the next thing you do today might be a place to try the other way.</p>
+
+    </div>
+
+    <p class="echo-name" data-oklch="oklch(60% 0.18 30)"><span class="name">terracotta</span></p>
+
+    <!-- ============ ENDLESS BOUNDARY ============ -->
+
+    <div class="ai-marker">— françois <span class="dot">·</span> the echo continues</div>
+
+    <div class="endless-body ai-body">
+      <!-- Paragraphs stitched from corpus sentences, appended by endless.js
+           as you scroll. No LLM calls. Forever. -->
+      <div class="endless-sentinel" aria-hidden="true" style="height:1px;"></div>
+    </div>
+
+  </article>
+
+  <footer class="site-footer" style="margin-top: var(--s-7);">
+    <span>echo · 2026 · françois chastel</span>
+    <span>
+      <a href="endless-final.html" style="color:inherit;">jump to depth 150 (rendered) →</a>
+      &nbsp; · &nbsp;
+      <a href="index.html" style="color:inherit;">gallery</a>
+    </span>
+  </footer>
+
+</div>
+
+<!-- depth + cost + mood indicator — the corpus "alive" -->
+<div class="endless-status" title="the corpus's current mood, depth, and inference cost · every paragraph is stitched from real sentences in the corpus">
+  <span class="mood">[ <span id="endless-mood">listening</span> ]</span>
+  <span>depth · <span id="endless-depth">0</span></span>
+  <span class="calls">0 ai calls</span>
+</div>
+
+<div class="read-progress" aria-hidden="true"></div>
+
+<script src="../reveal.js?v=10"></script>
+<script src="../progress.js?v=10"></script>
+<script src="../header.js?v=10"></script>
+<script src="endless.js?v=5"></script>
+
+</body>
+</html>

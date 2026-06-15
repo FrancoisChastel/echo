@@ -1,0 +1,54 @@
+/* ============================================================
+   echo — design tokens (LOCKED, phase 2 → phase 3)
+   These are the only source of design values. Lift into the
+   Astro scaffold unchanged at phase 4.
+   ============================================================ */
+
+:root {
+  /* palette ---------------------------------------------------- */
+
+  --paper:    oklch(98% 0.005 90);   /* warm off-white */
+  --ink:      oklch(22% 0.005 50);   /* warm dark */
+  --mute:     oklch(50% 0 0);        /* secondary text */
+  --mute-2:   oklch(65% 0 0);        /* tertiary, faint */
+  --rule:     oklch(85% 0 0);        /* hairline */
+
+  /* per-post echo color — overridden on post / film pages */
+  --echo:     oklch(60% 0.18 30);    /* terracotta default */
+
+  /* type families ---------------------------------------------- */
+
+  --serif:    'EB Garamond', Georgia, 'Times New Roman', serif;
+  --mono:     'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* type scale (fluid) ----------------------------------------- */
+
+  --t-mono-xs:  10px;
+  --t-mono-sm:  11px;
+  --t-mono-md:  13px;
+
+  --t-body:     clamp(1rem,    0.95rem + 0.3vw, 1.1rem);
+  --t-h2:       clamp(1.4rem,  1.2rem  + 0.8vw, 1.8rem);
+  --t-h1:       clamp(2.2rem,  1.7rem  + 2vw,   2.8rem);
+
+  --lh-body:    1.7;
+  --lh-tight:   1.15;
+
+  /* spacing scale ---------------------------------------------- */
+
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2rem;
+  --s-5: 3rem;
+  --s-6: 4rem;
+  --s-7: 6rem;
+  --s-8: 8rem;
+
+  /* layout ----------------------------------------------------- */
+
+  --measure:    52ch;          /* body column width */
+  --margin-col: 11rem;         /* essay metadata gutter */
+  --page-x:     clamp(1rem, 4vw, 3rem);
+  --page-max:   72rem;
+}

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>The Echo Chamber — ai · echo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../tokens.css?v=8">
+  <link rel="stylesheet" href="../styles.css?v=8">
+  <link rel="stylesheet" href="demo.css?v=1">
+
+  <style>:root { --echo: oklch(40% 0.12 280); }</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="site-header">
+    <a class="brand" href="../index.html">echo · françois chastel</a>
+    <nav>
+      <a href="#about">about</a>
+      <a href="#rss">rss</a>
+      <a href="#feed">json</a>
+      <a href="#llms">llms</a>
+    </nav>
+  </header>
+
+  <main class="chamber">
+
+    <p class="chamber-prompt">speak.</p>
+
+    <form class="chamber-input">
+      <input type="text" placeholder="a phrase, a feeling, a question" autofocus aria-label="speak">
+    </form>
+    <p class="chamber-hint">press return · the corpus will echo</p>
+
+    <div class="chamber-out">
+      <p class="chamber-response"></p>
+      <p class="chamber-source"></p>
+      <span class="chamber-again">speak again</span>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>echo · 2026 · /echo</span>
+    <span><a href="index.html" style="color:inherit;">← back to ai gallery</a></span>
+  </footer>
+
+</div>
+
+<script src="../header.js?v=8"></script>
+<script src="chamber.js?v=1"></script>
+
+</body>
+</html>

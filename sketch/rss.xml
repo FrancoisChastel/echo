@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>echo · françois chastel</title>
+    <link>https://francoischastel.github.io/echo/sketch/</link>
+    <description>A small log of films, essays, and notes by François Chastel.</description>
+    <language>en</language>
+    <atom:link href="https://francoischastel.github.io/echo/sketch/rss.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>Three movements on slowness</title>
+      <link>https://francoischastel.github.io/echo/sketch/article.html</link>
+      <guid isPermaLink="true">https://francoischastel.github.io/echo/sketch/article.html</guid>
+      <pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
+      <description>Notes from a year of writing differently — first in code, then in data, then in confession.</description>
+      <category>essay</category>
+    </item>
+
+    <item>
+      <title>On slowness</title>
+      <link>https://francoischastel.github.io/echo/sketch/post.html</link>
+      <guid isPermaLink="true">https://francoischastel.github.io/echo/sketch/post.html</guid>
+      <pubDate>Wed, 27 May 2026 00:00:00 +0000</pubDate>
+      <description>There is a particular pleasure in doing one thing slowly when the world is fast — not as a protest, exactly, but as a counterweight.</description>
+      <category>essay</category>
+    </item>
+
+    <item>
+      <title>Field notes, vol. 3</title>
+      <link>https://francoischastel.github.io/echo/sketch/film.html</link>
+      <guid isPermaLink="true">https://francoischastel.github.io/echo/sketch/film.html</guid>
+      <pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate>
+      <description>A 90-second study of light through paper.</description>
+      <category>film</category>
+    </item>
+
+  </channel>
+</rss>

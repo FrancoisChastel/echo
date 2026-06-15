@@ -1,0 +1,52 @@
+/* ============================================================
+   echo — design tokens · v2 quiet academic
+   Same locked palette family (paper/ink), tuned narrower:
+   smaller type, longer line-height, narrower measure,
+   more space around everything.
+   ============================================================ */
+
+:root {
+  /* palette — slightly creamier paper, same warm dark */
+
+  --paper:    oklch(97% 0.012 75);
+  --ink:      oklch(24% 0.008 50);
+  --mute:     oklch(48% 0 0);
+  --mute-2:   oklch(72% 0 0);
+  --rule:     oklch(83% 0 0);
+
+  --echo:     oklch(60% 0.18 30);    /* terracotta default */
+
+  /* type families (locked) */
+
+  --serif:    'EB Garamond', Georgia, 'Times New Roman', serif;
+  --mono:     'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* type scale — smaller, gentler */
+
+  --t-mono-xs:  10px;
+  --t-mono-sm:  11px;
+
+  --t-body:     clamp(1rem,    0.96rem + 0.2vw, 1.05rem);
+  --t-h2:       clamp(1.3rem,  1.1rem  + 0.6vw, 1.55rem);
+  --t-h1:       clamp(1.8rem,  1.4rem  + 1.5vw, 2.3rem);
+
+  --lh-body:    1.85;
+  --lh-tight:   1.18;
+
+  /* spacing scale — generous */
+
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2rem;
+  --s-5: 3rem;
+  --s-6: 4.5rem;
+  --s-7: 7rem;
+  --s-8: 10rem;
+
+  /* layout — narrower */
+
+  --measure:  44ch;
+  --page-x:   clamp(1rem, 5vw, 4rem);
+  --page-max: 56rem;
+}

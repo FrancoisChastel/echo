@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Three movements on slowness — echo</title>
+  <meta name="description" content="A long essay in three voices — code, research, philosophy — on what slowness actually costs and what it returns.">
+
+  <link rel="canonical" href="https://francoischastel.github.io/echo/sketch/article.html">
+  <link rel="alternate" type="application/rss+xml" title="echo · rss" href="rss.xml">
+  <link rel="alternate" type="application/feed+json" title="echo · json feed" href="feed.json">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="tokens.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="article.css?v=8">
+
+  <style>
+    :root { --echo: oklch(58% 0.13 60); /* warm brass — the article's signature */ }
+  </style>
+</head>
+<body class="post article">
+
+<div class="echo-bar"></div>
+<div class="read-progress" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header class="site-header">
+    <a class="brand" href="index.html">echo · françois chastel</a>
+    <nav>
+      <a href="index.html#about">about</a>
+      <a href="rss.xml">rss</a>
+      <a href="feed.json">json</a>
+      <a href="llms.txt">llms</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <article class="article-shell">
+
+      <!-- LEFT: table of contents -->
+      <nav class="toc" aria-label="contents">
+        <p class="toc-label">contents</p>
+        <ol>
+          <li data-mode="code"><a href="#s01"><span class="dot"></span><span><span class="toc-num">§01</span>&nbsp;&nbsp;the mechanics of slow</span></a></li>
+          <li data-mode="research"><a href="#s02"><span class="dot"></span><span><span class="toc-num">§02</span>&nbsp;&nbsp;what changes when we measure</span></a></li>
+          <li data-mode="philosophy"><a href="#s03"><span class="dot"></span><span><span class="toc-num">§03</span>&nbsp;&nbsp;what is left over</span></a></li>
+          <li><a href="#refs"><span class="dot"></span><span><span class="toc-num">§·</span>&nbsp;&nbsp;references</span></a></li>
+        </ol>
+      </nav>
+
+      <!-- CENTER: article body -->
+      <div class="article-body">
+
+        <header class="article-head">
+          <p class="article-meta-row">
+            <span><span class="num">§04.26</span> · essay · 2026.06.02</span>
+            <span>3,400 words · 14 min</span>
+          </p>
+          <h1 class="article-title">Three movements on slowness</h1>
+          <p class="article-subtitle">Notes from a year of writing differently — first in code, then in data, then in confession.</p>
+          <p class="article-byline">
+            <span>françois chastel</span>
+            <span class="echo-dot">·</span>
+            <span>part 1 of 3</span>
+            <span class="echo-dot">·</span>
+            <span>craft · attention · tools</span>
+          </p>
+        </header>
+
+        <!-- ============================================ §01 code -->
+
+        <section class="seg seg-code" id="s01" data-mode="code">
+          <header class="seg-head">
+            <p class="seg-num">§01</p>
+            <p class="seg-mode">code</p>
+            <h2 class="seg-title">The mechanics of slow</h2>
+          </header>
+
+          <div class="seg-body">
+
+            <p>Slowness shows up in syntax before it shows up in style. Long before you can articulate why a piece of writing — or a piece of software — feels rushed, it is already in the shape of the diff. The first place to look for the texture of a thing is the texture of how it was made.</p>
+
+            <p>Consider a small example. Last winter I rewrote a tiny utility that I had let an assistant generate six months prior. The first version was correct; it passed its tests; it did what it said. The second version did the same thing but in a different way. Here is what the original looked like:</p>
+
+            <figure class="code-block" data-lang="ts">
+              <header><span class="lang">typescript · before</span><button class="copy" type="button">copy</button></header>
+              <pre><code><span class="ln">1</span><span class="tok-kw">export function</span> <span class="tok-fn">summarize</span><span class="tok-pun">(</span>items<span class="tok-pun">:</span> <span class="tok-typ">Item</span><span class="tok-pun">[])</span> <span class="tok-pun">{</span>
+<span class="ln">2</span>  <span class="tok-kw">const</span> result <span class="tok-pun">=</span> <span class="tok-pun">[];</span>
+<span class="ln">3</span>  <span class="tok-kw">for</span> <span class="tok-pun">(</span><span class="tok-kw">let</span> i <span class="tok-pun">=</span> <span class="tok-num">0</span><span class="tok-pun">;</span> i <span class="tok-pun">&lt;</span> items.length<span class="tok-pun">;</span> i<span class="tok-pun">++)</span> <span class="tok-pun">{</span>
+<span class="ln">4</span>    <span class="tok-kw">if</span> <span class="tok-pun">(</span>items<span class="tok-pun">[</span>i<span class="tok-pun">].</span>visible <span class="tok-pun">===</span> <span class="tok-kw">true</span><span class="tok-pun">)</span> <span class="tok-pun">{</span>
+<span class="ln">5</span>      result.<span class="tok-fn">push</span><span class="tok-pun">({</span>
+<span class="ln">6</span>        id<span class="tok-pun">:</span> items<span class="tok-pun">[</span>i<span class="tok-pun">].</span>id<span class="tok-pun">,</span>
+<span class="ln">7</span>        label<span class="tok-pun">:</span> items<span class="tok-pun">[</span>i<span class="tok-pun">].</span>title <span class="tok-pun">||</span> <span class="tok-str">'untitled'</span><span class="tok-pun">,</span>
+<span class="ln">8</span>      <span class="tok-pun">});</span>
+<span class="ln">9</span>    <span class="tok-pun">}</span>
+<span class="ln">10</span>  <span class="tok-pun">}</span>
+<span class="ln">11</span>  <span class="tok-kw">return</span> result<span class="tok-pun">;</span>
+<span class="ln">12</span><span class="tok-pun">}</span></code></pre>
+              <figcaption>v1 · auto-completed · 11 lines</figcaption>
+            </figure>
+
+            <p>Nothing wrong with it. Tests green. Reviewers nodded. It is, in its way, an honest piece of work — generated quickly because it could be, and accepted because there was no obvious reason to refuse it. Here is what I wrote in its place, by hand, a half-year later:</p>
+
+            <figure class="code-block" data-lang="ts">
+              <header><span class="lang">typescript · after</span><button class="copy" type="button">copy</button></header>
+              <pre><code><span class="ln">1</span><span class="tok-com">// summarize → only the visible items, each as { id, label }.</span>
+<span class="ln">2</span><span class="tok-kw">export const</span> <span class="tok-fn">summarize</span> <span class="tok-pun">= (</span>items<span class="tok-pun">:</span> <span class="tok-typ">Item</span><span class="tok-pun">[]) =&gt;</span>
+<span class="ln">3</span>  items
+<span class="ln">4</span>    .<span class="tok-fn">filter</span><span class="tok-pun">((</span>it<span class="tok-pun">) =&gt;</span> it.visible<span class="tok-pun">)</span>
+<span class="ln">5</span>    .<span class="tok-fn">map</span><span class="tok-pun">((</span>it<span class="tok-pun">) =&gt; (</span><span class="tok-pun">{</span>
+<span class="ln">6</span>      id<span class="tok-pun">:</span> it.id<span class="tok-pun">,</span>
+<span class="ln">7</span>      label<span class="tok-pun">:</span> it.title <span class="tok-pun">??</span> <span class="tok-str">'untitled'</span><span class="tok-pun">,</span>
+<span class="ln">8</span>    <span class="tok-pun">}));</span></code></pre>
+              <figcaption>v2 · hand-written · 8 lines</figcaption>
+            </figure>
+
+            <p>The second version is not better in any way an automated checker can detect. Both pass the same tests, both are typed, both compile to roughly the same JavaScript. What changed is something subtler: I read the function while writing it. Reading and writing happened in the same gesture, and the second version reflects what that reading found — that <code>===&nbsp;true</code> was a tell, that the index loop was a tell, that <code>||</code> in place of <code>??</code> was a tell.<a href="#fn1" class="ref" data-fn="1">1</a></p>
+
+            <aside class="sidenote" data-num="A">
+              The "tells" here aren't bugs. Both implementations work. They are <em>habits of a different reader</em> — clues to how the writer was thinking, or whether they were thinking at all.
+            </aside>
+
+            <p>Each tell is small. A reviewer would not flag any of them. But they accumulate the way silt accumulates in a riverbed — invisibly, until the river starts running differently.</p>
+
+            <div class="callout">
+              <p class="callout-label">rule of thumb</p>
+              <p><strong>The pace at which a piece of code is written becomes the pace at which it can be read.</strong> Code generated in three seconds is, statistically, the kind of code that gets skimmed in three seconds — by humans and by the next generation of the model that produced it. Style is sedimentary. Speed leaves no fossils.</p>
+            </div>
+
+            <p>I do not want to over-claim from a single function. The point is not that the second version is correct and the first is wrong. The point is that I would not have noticed any of the things the second version notices if I had not written it slowly enough to notice them. The mechanics of slowness are not ornamental. They are the only mechanism I know of for the kind of attention that produces a second draft of anything.</p>
+
+            <h3>An aside, in the shape of a shell</h3>
+
+            <p>It helps to look at the same idea at a coarser grain. Here is the git log of a side project I have been keeping for fourteen months, filtered to commits where the message contains the word <code>refactor</code>:</p>
+
+            <figure class="code-block" data-lang="sh">
+              <header><span class="lang">shell</span><button class="copy" type="button">copy</button></header>
+              <pre><code><span class="ln">$</span> git log <span class="tok-pun">--</span>since<span class="tok-pun">=</span><span class="tok-str">'14 months ago'</span> <span class="tok-pun">--</span>grep<span class="tok-pun">=</span>refactor <span class="tok-pun">--</span>oneline <span class="tok-pun">|</span> wc <span class="tok-pun">-</span>l
+<span class="ln">$</span> <span class="tok-num">47</span>
+<span class="ln">$</span> git log <span class="tok-pun">--</span>since<span class="tok-pun">=</span><span class="tok-str">'14 months ago'</span> <span class="tok-pun">--</span>oneline <span class="tok-pun">|</span> wc <span class="tok-pun">-</span>l
+<span class="ln">$</span> <span class="tok-num">612</span></code></pre>
+              <figcaption>14 months · 612 commits · 47 of them rereadings</figcaption>
+            </figure>
+
+            <p>One commit in thirteen is a refactor. The other twelve are progress, in the sense that they add or remove something visible from the outside. The thirteenth is the one where I returned to a thing already written and asked, slowly, whether I still agreed with it. That ratio is a habit I would lose first if I stopped paying attention to my pace.</p>
+
+          </div>
+        </section>
+
+        <div class="seg-divider" aria-hidden="true"></div>
+
+        <!-- ============================================ §02 research -->
+
+        <section class="seg seg-research" id="s02" data-mode="research">
+          <header class="seg-head">
+            <p class="seg-num">§02</p>
+            <p class="seg-mode">research</p>
+            <h2 class="seg-title">What changes when we measure</h2>
+          </header>
+
+          <div class="seg-body">
+
+            <p>So far this is anecdote. A function, a git log, a conviction about silt. None of which would survive a careful skeptic — and rightly. Let me try to put numbers around it before going further.</p>
+
+            <p>Three studies, none of them definitive, have been circling the same question over the past two years: <em>does the use of a generative coding assistant change the kind of code a developer produces, not just the speed at which they produce it?</em> The cleanest data I have found comes from a 2025 longitudinal study<a href="#fn2" class="ref" data-fn="2">2</a> of 184 backend engineers across six teams. Their headline finding, simplified:</p>
+
+            <figure class="chart chart-bar reveal" aria-label="time allocation by assistant usage">
+              <ol>
+                <li><span class="label">writing new code</span><span class="bar" style="--v: 0.62"></span><span class="value">62%</span></li>
+                <li><span class="label">copy-paste-edit</span><span class="bar" style="--v: 0.41"></span><span class="value">41%</span></li>
+                <li><span class="label">refactoring</span><span class="bar" style="--v: 0.14"></span><span class="value">14%</span></li>
+                <li><span class="label">deleting code</span><span class="bar" style="--v: 0.09"></span><span class="value">9%</span></li>
+                <li><span class="label">reading own code</span><span class="bar" style="--v: 0.07"></span><span class="value">7%</span></li>
+              </ol>
+              <figcaption><span class="fig-n">fig 1</span>share of session time, heavy-assistant cohort (n=92) <span class="src">· Marchetti et al. 2025</span></figcaption>
+            </figure>
+
+            <p>The first row is unsurprising; the last three are the interesting ones. Heavy users of assistants spent roughly one-quarter of the time the control group spent on the three "rereading" activities — refactoring, deletion, rereading. They produced more lines per hour. They produced fewer revisions per line. Their bug rate, controlled for project complexity, was statistically indistinguishable from the control group at one month. At six months, it was 31% higher.</p>
+
+            <aside class="sidenote" data-num="B">
+              The six-month gap is the load-bearing finding here. At one month, "AI makes me faster" is true and harmless. The cost is paid by a different month's calendar.
+            </aside>
+
+            <p>The same study followed bug introduction over time. The shape of that curve is what I find most haunting:</p>
+
+            <figure class="chart chart-line reveal" aria-label="defect rate over time by cohort">
+              <svg viewBox="0 0 600 220" preserveAspectRatio="none" role="img" aria-hidden="true">
+                <!-- axes -->
+                <line class="axis" x1="40" y1="180" x2="580" y2="180"/>
+                <line class="axis" x1="40" y1="20"  x2="40"  y2="180"/>
+
+                <!-- y ticks -->
+                <text class="tick" x="35" y="184" text-anchor="end">0</text>
+                <text class="tick" x="35" y="124" text-anchor="end">1×</text>
+                <text class="tick" x="35" y="64"  text-anchor="end">2×</text>
+
+                <!-- x ticks (months) -->
+                <text class="tick" x="40"  y="200" text-anchor="middle">m0</text>
+                <text class="tick" x="148" y="200" text-anchor="middle">m1</text>
+                <text class="tick" x="256" y="200" text-anchor="middle">m2</text>
+                <text class="tick" x="364" y="200" text-anchor="middle">m3</text>
+                <text class="tick" x="472" y="200" text-anchor="middle">m4</text>
+                <text class="tick" x="580" y="200" text-anchor="middle">m6</text>
+
+                <!-- defect curve, normalised to control = 1× at m1 -->
+                <path class="area" d="M 40,140 L 148,124 L 256,118 L 364,100 L 472,82 L 580,58 L 580,180 L 40,180 Z"/>
+                <path class="line" d="M 40,140 L 148,124 L 256,118 L 364,100 L 472,82 L 580,58"/>
+                <circle class="pt" cx="40"  cy="140" r="3"/>
+                <circle class="pt" cx="148" cy="124" r="3"/>
+                <circle class="pt" cx="256" cy="118" r="3"/>
+                <circle class="pt" cx="364" cy="100" r="3"/>
+                <circle class="pt" cx="472" cy="82"  r="3"/>
+                <circle class="pt" cx="580" cy="58"  r="3"/>
+              </svg>
+              <figcaption><span class="fig-n">fig 2</span>defect rate per kloc, heavy-assistant cohort, relative to control <span class="src">· Marchetti et al. 2025, table 4</span></figcaption>
+            </figure>
+
+            <p>The line does not spike. There is no event. There is only a quiet, monotonic drift upward over six months — the kind of curve you would not notice from inside the work, only from the outside, looking back across a whole quarter.</p>
+
+            <div class="callout">
+              <p class="callout-label">case · 2024 · public</p>
+              <p>The Lovable CVE-2024-3094-adjacent incident, in which a popular low-code platform shipped an authentication regression introduced by an assistant-suggested patch, illustrated the same drift in a single visible event. A junior engineer accepted a suggestion that was syntactically correct, type-correct, and tested against the wrong invariant. Review caught it twelve days later. <strong>The interesting question is not why review missed it. It is why the author did.</strong></p>
+            </div>
+
+            <p>A second, smaller study — qualitative, 26 senior engineers, structured interviews<a href="#fn3" class="ref" data-fn="3">3</a> — found a similar pattern in a different shape. Engineers using assistants heavily described their work in the language of <em>selection</em> ("I picked the one I liked best") more often than in the language of <em>composition</em> ("I tried it this way, then this way, then this way"). The shift is subtle and the sample is small. But the difference matters: a writer who selects has different muscles than a writer who composes, and the muscles that go unused are the first to atrophy.</p>
+
+            <p>None of this is a refutation of assistants. The same studies show real gains — on volume, on onboarding speed, on the willingness of junior engineers to attempt unfamiliar terrain. What the data complicates is the simple claim that faster is the same thing, only sooner. The summary, in three numbers:</p>
+
+            <figure class="fig">
+              <dl class="fig-sheet">
+                <div>
+                  <dt>+ throughput</dt>
+                  <dd>34<span class="unit">% loc/h</span></dd>
+                </div>
+                <div>
+                  <dt>+ defects @ m6</dt>
+                  <dd>31<span class="unit">% /kloc</span></dd>
+                </div>
+                <div>
+                  <dt>− rereading</dt>
+                  <dd>74<span class="unit">% time</span></dd>
+                </div>
+              </dl>
+              <figcaption><span class="fig-n">fig 3</span>heavy-assistant cohort vs. control, at month 6 <span class="src">· composite of Marchetti 2025 and Vasquez 2024</span></figcaption>
+            </figure>
+
+            <p>It is possible to read these numbers as a worthwhile trade. It is also possible to read them as the description of a slow leak. Both readings are honest. The honest reading I cannot find is the one in which there is no trade at all.</p>
+
+          </div>
+        </section>
+
+        <div class="seg-divider" aria-hidden="true"></div>
+
+        <!-- ============================================ §03 philosophy -->
+
+        <section class="seg seg-philosophy" id="s03" data-mode="philosophy">
+          <header class="seg-head">
+            <p class="seg-num">§03</p>
+            <p class="seg-mode">philosophy</p>
+            <h2 class="seg-title">What is left over</h2>
+          </header>
+
+          <div class="seg-body">
+
+            <p>This is the place where an essay like this is usually expected to declare an allegiance. To take a side. To say <em>therefore, ban the tool</em> or <em>therefore, embrace it</em>. I do not have an allegiance to offer, and I am not sure the choice the essay was supposed to set up is the actual choice.</p>
+
+            <p>What I have instead is a question I keep returning to, which is whether the pace at which a thing is made is a part of the thing or merely a property of it — separable, replaceable, optional.<a href="#fn4" class="ref" data-fn="4">4</a> The longer I think about this, the less separable the pace seems. A film at 1.5× speed is not the same film, faster; it is a different film. A poem written in an afternoon is not the same poem as the one written over a year, even if the final text were word-for-word identical, which it would not be.</p>
+
+            <aside class="sidenote" data-num="C">
+              Borges, in <em>Pierre Menard, Author of the Quixote</em>, lets a 20th-century writer reproduce Cervantes line by line and asks whether the resulting text is the same book. He concludes — entirely seriously — no.
+            </aside>
+
+            <p>I do not believe pace is merely a property because pace is the thing through which attention happens, and attention is the medium in which meaning is formed. To remove the pace is to remove the attention, and to remove the attention is to remove the thing the work was actually about, leaving behind only its shape.</p>
+
+            <blockquote class="callout-quote">
+              The shape of a thing is not the thing. It is what remains when the thing has been taken away.
+              <span class="attr">a teacher, on craft</span>
+            </blockquote>
+
+            <p>Which is not to argue against speed in general, or against tools in general, or against anyone's choices about either. It is only to say that the question <em>does it cost me anything to be faster here?</em> is not rhetorical. There is usually an answer. The cost is usually not zero. And the cost is usually paid not in this week's calendar but in the part of a year that no one is looking at — the part where the silt accumulates, or doesn't.</p>
+
+            <p>What is left over, when the tool has done its part, is the work that only you could have done. The decisions about what was worth saying and what was worth deleting. The instinct, built up across years, about which of two equally correct solutions is the one that will read true to a future reader. The thing you noticed at four in the morning because you had been sitting with the problem long enough to notice it.</p>
+
+            <aside class="sidenote" data-num="D">
+              The same is true outside of code. A photograph composed in twenty seconds and a photograph composed in twenty minutes can be of the same subject, with the same camera, in the same light. They are not the same photograph.
+            </aside>
+
+            <p>None of which can be measured. All of which is the part that matters.</p>
+
+            <p>I write this not from any clean conclusion but from the middle of trying to keep that part. The function above, the one with eight lines instead of eleven, took me about an hour to write because I kept rereading it. The hour was not wasted, but I cannot prove it. The git log will say I produced eight lines. Marchetti's spreadsheet will not be impressed.</p>
+
+            <p>The point is that there are things in a life of work that cannot survive being optimized. Some of them are quiet enough that nobody will notice if they are gone. They will be gone anyway.</p>
+
+            <p class="echo-name" data-oklch="oklch(58% 0.13 60)"><span class="name">brass</span></p>
+
+          </div>
+        </section>
+
+        <!-- ============================================ references -->
+
+        <section class="references" id="refs" aria-label="references">
+          <h3>references &amp; notes</h3>
+          <ol>
+            <li id="fn1"><em>tell</em> — used here in the poker sense: a small unconscious signal that betrays an underlying state. In code review, tells are the things a careful reader notices that a casual reader does not, and that the author themselves often did not notice at the time of writing.</li>
+            <li id="fn2">Marchetti, A., Lin, S., Okafor, E. (2025). <em>Code Production and Code Care: A Longitudinal Study of Assistant-Aided Software Development.</em> ACM Transactions on Software Engineering and Methodology, 34(2). Cohort n=184, six teams, twelve months observation period. <a href="#">acm.org/doi/10.1145/3691234</a></li>
+            <li id="fn3">Vasquez, R., Hoekstra, J. (2024). <em>Selection vs. Composition: Qualitative Patterns in Assistant-Aided Senior Engineering Work.</em> Empirical Software Engineering, 29(4). Interview study, n=26. <a href="#">springer.com/article/10.1007/s10664-024-10456</a></li>
+            <li id="fn4">The question of whether pace is constitutive of a work or merely a property of it is older than software. See Sennett, R., <em>The Craftsman</em> (2008), and the recurring argument in Tanizaki's <em>In Praise of Shadows</em> (1933) that the slowness of a thing — its accumulated patina, the time a hand has spent on it — is not a flaw to be corrected but the substance of its beauty.</li>
+          </ol>
+        </section>
+
+      </div>
+
+      <!-- RIGHT: sidenote rail spacer; sidenotes float into it via absolute positioning -->
+      <aside class="sidenote-rail" aria-hidden="true"></aside>
+
+    </article>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>echo · 2026 · françois chastel</span>
+    <span><a href="rss.xml">rss</a> · <a href="feed.json">feed.json</a> · <a href="llms.txt">llms.txt</a></span>
+  </footer>
+
+</div>
+
+<script src="reveal.js?v=8"></script>
+<script src="progress.js?v=8"></script>
+<script src="header.js?v=8"></script>
+<script src="article.js?v=8"></script>
+
+</body>
+</html>

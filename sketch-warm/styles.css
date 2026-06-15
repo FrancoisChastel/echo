@@ -1,0 +1,464 @@
+/* ============================================================
+   echo — sketch styles
+   Direct port to Astro scaffold at phase 4. Nothing here is
+   sketch-only — it's the real CSS.
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; text-decoration: none; }
+a:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+img, video { max-width: 100%; display: block; }
+
+/* ============================================================
+   layout primitives
+   ============================================================ */
+
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 var(--page-x);
+}
+
+/* echo hairline at the top edge — only on post/film pages */
+.echo-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--echo);
+  z-index: 100;
+}
+
+/* ============================================================
+   site header & footer
+   ============================================================ */
+
+.site-header {
+  padding: var(--s-5) 0 var(--s-3);
+  font-family: var(--mono);
+  font-size: var(--t-mono-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.site-header .brand {
+  color: var(--ink);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.site-header nav {
+  display: flex;
+  gap: var(--s-3);
+}
+
+.site-header nav a {
+  color: var(--mute);
+}
+.site-header nav a:hover { color: var(--ink); }
+
+.site-footer {
+  margin-top: var(--s-7);
+  padding: var(--s-3) 0 var(--s-5);
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.site-footer .colophon {
+  max-width: 50ch;
+}
+
+/* ============================================================
+   section captions ("— recent", "— archive")
+   ============================================================ */
+
+.section-caption {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin: var(--s-6) 0 var(--s-4);
+}
+
+.section-caption:first-of-type {
+  margin-top: var(--s-4);
+}
+
+/* ============================================================
+   homepage — loose list (recent)
+   ============================================================ */
+
+.loose-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.loose-item {
+  display: block;
+  color: inherit;
+}
+
+.loose-item .meta {
+  font-family: var(--mono);
+  font-size: var(--t-mono-xs);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: var(--s-1);
+}
+
+.loose-item .title {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0 0 var(--s-1);
+  line-height: 1.15;
+  transition: color 150ms ease;
+}
+
+.loose-item .summary {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--mute);
+  margin: 0;
+  max-width: 58ch;
+  line-height: 1.5;
+}
+
+.loose-item:hover .title { color: var(--echo); }
+
+/* ============================================================
+   homepage — dense list (archive)
+   ============================================================ */
+
+.dense-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.dense-item {
+  display: grid;
+  grid-template-columns: 5rem 1fr 5rem;
+  gap: var(--s-3);
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+  color: inherit;
+  font-family: var(--serif);
+  font-size: 1rem;
+  align-items: baseline;
+  transition: background 150ms ease;
+}
+
+.dense-item:hover { background: oklch(96% 0.005 90); }
+
+.dense-item .date {
+  font-family: var(--mono);
+  font-size: var(--t-mono-xs);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+}
+
+.dense-item .title {
+  font-weight: 400;
+  transition: color 150ms ease;
+}
+
+.dense-item .kind {
+  font-family: var(--mono);
+  font-size: var(--t-mono-xs);
+  color: var(--mute);
+  text-align: right;
+}
+
+.dense-item:hover .title { color: var(--echo); }
+
+.year-row {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: var(--s-3);
+  padding: var(--s-3) 0 var(--s-1);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   post page — centered measure + left margin metadata
+   ============================================================ */
+
+.post {
+  display: grid;
+  grid-template-columns: var(--margin-col) minmax(0, var(--measure));
+  gap: var(--s-5);
+  margin: var(--s-7) auto 0;
+  justify-content: center;
+}
+
+.post-meta {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  padding-top: 0.4rem;
+}
+
+.post-meta dl { margin: 0; }
+.post-meta dt {
+  color: var(--mute);
+  font-weight: 400;
+  margin-top: var(--s-3);
+}
+.post-meta dt:first-of-type { margin-top: 0; }
+.post-meta dd { margin: 0 0 0.2rem; color: var(--ink); }
+.post-meta .tag { display: block; }
+
+.post-meta .echo-tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  color: var(--mute);
+  margin-top: var(--s-3);
+}
+.post-meta .echo-tag::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--echo);
+  flex-shrink: 0;
+  transform: translateY(1px);
+}
+.post-meta .echo-tag .name { color: var(--ink); }
+
+.post-main {
+  max-width: var(--measure);
+}
+
+.post-main h1 {
+  font-family: var(--serif);
+  font-size: var(--t-h1);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--s-1);
+}
+
+.post-main .post-lead {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--s-5);
+}
+
+.post-main p {
+  margin: 0 0 var(--s-3);
+}
+
+.post-main p:first-of-type::first-letter {
+  /* reserved for drop cap if/when wanted; off by default */
+}
+
+.post-main h2 {
+  font-family: var(--serif);
+  font-size: var(--t-h2);
+  font-weight: 400;
+  margin: var(--s-5) 0 var(--s-2);
+  line-height: var(--lh-tight);
+}
+
+.post-main em { font-style: italic; }
+.post-main strong { font-weight: 500; }
+
+.post-main blockquote {
+  margin: var(--s-4) 0;
+  padding-left: var(--s-3);
+  border-left: 1px solid var(--rule);
+  color: var(--mute);
+  font-style: italic;
+}
+
+.post-main hr {
+  border: none;
+  text-align: center;
+  margin: var(--s-5) 0;
+  color: var(--mute-2);
+}
+.post-main hr::before { content: '· · ·'; letter-spacing: 0.5em; }
+
+/* post page mobile — collapse margin column below body */
+@media (max-width: 900px) {
+  .post {
+    grid-template-columns: 1fr;
+    max-width: var(--measure);
+    margin: var(--s-5) auto 0;
+    gap: 0;
+  }
+  .post-main { order: 1; }
+  .post-meta {
+    order: 2;
+    margin-top: var(--s-6);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+  }
+  .post-meta dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.4rem var(--s-3);
+  }
+  .post-meta dt, .post-meta dd { margin: 0; }
+}
+
+/* ============================================================
+   film page — centered with breathing space
+   ============================================================ */
+
+.film {
+  max-width: 760px;
+  margin: var(--s-6) auto 0;
+  text-align: center;
+}
+
+.film-crumb {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.1em;
+  margin-bottom: var(--s-6);
+}
+
+.film-frame {
+  aspect-ratio: 16/9;
+  background:
+    radial-gradient(ellipse at 30% 40%, oklch(45% 0.06 200) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 60%, oklch(30% 0.05 240) 0%, transparent 60%),
+    linear-gradient(135deg, oklch(28% 0.04 220) 0%, oklch(18% 0.03 240) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: oklch(85% 0 0);
+  font-size: 2rem;
+  margin: 0 auto var(--s-4);
+  position: relative;
+  width: 100%;
+}
+
+.film-frame::after {
+  content: '▶';
+  opacity: 0.35;
+  font-size: 1.5rem;
+}
+
+.film-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--t-h2);
+  margin: var(--s-4) 0 0.4rem;
+  line-height: var(--lh-tight);
+}
+
+.film-caption {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  color: var(--mute);
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.film-body {
+  text-align: left;
+  max-width: var(--measure);
+  margin: var(--s-6) auto 0;
+}
+
+.film-body p { margin: 0 0 var(--s-3); }
+
+/* ============================================================
+   echo color name (bottom of post / film)
+   ============================================================ */
+
+.echo-name {
+  font-family: var(--mono);
+  font-size: var(--t-mono-sm);
+  letter-spacing: 0.05em;
+  margin-top: var(--s-6);
+  display: inline-block;
+  color: var(--mute);
+}
+.echo-name .dash {
+  color: var(--echo);
+  margin-right: 0.4em;
+}
+.echo-name .name { color: var(--echo); }
+
+/* ============================================================
+   utility — sketch-only navigation between the three pages
+   (delete when porting to Astro)
+   ============================================================ */
+
+.sketch-nav {
+  position: fixed;
+  bottom: var(--s-2);
+  right: var(--s-2);
+  font-family: var(--mono);
+  font-size: var(--t-mono-xs);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.4rem 0.7rem;
+  display: flex;
+  gap: 0.6rem;
+  z-index: 200;
+  letter-spacing: 0.05em;
+}
+.sketch-nav a { color: oklch(70% 0 0); }
+.sketch-nav a:hover { color: var(--paper); }
+.sketch-nav a.current { color: var(--paper); }
+
+/* ============================================================
+   responsive — header/footer fold
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .site-header {
+    flex-direction: column;
+    gap: var(--s-2);
+    align-items: flex-start;
+  }
+  .dense-item {
+    grid-template-columns: 4rem 1fr;
+    gap: var(--s-2);
+  }
+  .dense-item .kind { grid-column: 2; text-align: left; }
+}

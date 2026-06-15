@@ -1,0 +1,37 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "echo · françois chastel",
+  "home_page_url": "https://francoischastel.github.io/echo/sketch/",
+  "feed_url": "https://francoischastel.github.io/echo/sketch/feed.json",
+  "description": "A small log of films, essays, and notes by François Chastel.",
+  "language": "en",
+  "authors": [
+    { "name": "François Chastel", "url": "https://francoischastel.github.io/echo/sketch/" }
+  ],
+  "items": [
+    {
+      "id": "https://francoischastel.github.io/echo/sketch/article.html",
+      "url": "https://francoischastel.github.io/echo/sketch/article.html",
+      "title": "Three movements on slowness",
+      "summary": "Notes from a year of writing differently — first in code, then in data, then in confession.",
+      "date_published": "2026-06-02T00:00:00Z",
+      "tags": ["essay"]
+    },
+    {
+      "id": "https://francoischastel.github.io/echo/sketch/post.html",
+      "url": "https://francoischastel.github.io/echo/sketch/post.html",
+      "title": "On slowness",
+      "summary": "There is a particular pleasure in doing one thing slowly when the world is fast — not as a protest, exactly, but as a counterweight.",
+      "date_published": "2026-05-27T00:00:00Z",
+      "tags": ["essay"]
+    },
+    {
+      "id": "https://francoischastel.github.io/echo/sketch/film.html",
+      "url": "https://francoischastel.github.io/echo/sketch/film.html",
+      "title": "Field notes, vol. 3",
+      "summary": "A 90-second study of light through paper.",
+      "date_published": "2026-05-12T00:00:00Z",
+      "tags": ["film"]
+    }
+  ]
+}

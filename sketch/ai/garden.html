@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>The Echo Garden — ai · echo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../tokens.css?v=8">
+  <link rel="stylesheet" href="../styles.css?v=8">
+  <link rel="stylesheet" href="demo.css?v=1">
+
+  <style>:root { --echo: oklch(70% 0.16 80); }</style>
+</head>
+<body class="home">
+
+<div class="page">
+
+  <header class="site-header">
+    <a class="brand" href="../index.html">echo · françois chastel</a>
+    <nav>
+      <a href="#about">about</a>
+      <a href="#rss">rss</a>
+      <a href="#feed">json</a>
+      <a href="#llms">llms</a>
+    </nav>
+  </header>
+
+  <p class="section-caption" style="margin-top: var(--s-5);">— echo garden · the corpus by feeling</p>
+
+  <div class="garden" id="garden">
+    <!-- Mock constellation. Each dot is a post; position simulates emotional clustering
+         (attention-cluster top-left, craft-cluster center, film-cluster lower-right). -->
+
+    <!-- attention cluster (top-left, mostly indigo / moss / teal) -->
+    <a class="dot" href="../post.html" data-label="on slowness · 27.v.2026"     style="--dot: oklch(60% 0.18 30);  width:18px; height:18px; left:22%; top:18%;"></a>
+    <a class="dot" href="../post.html" data-label="on attention · 11.iv.2026"   style="--dot: oklch(55% 0.14 130); width:16px; height:16px; left:14%; top:28%;"></a>
+    <a class="dot" href="../post.html" data-label="geometry of attention · 02.ii.2026" style="--dot: oklch(40% 0.12 280); width:14px; height:14px; left:28%; top:32%;"></a>
+    <a class="dot" href="../post.html" data-label="reading notes — march · 18.ii.2026" style="--dot: oklch(55% 0.14 130); width:10px; height:10px; left:9%;  top:20%;"></a>
+
+    <!-- craft cluster (center) -->
+    <a class="dot" href="../post.html" data-label="the shape of a day · 22.iii.2026" style="--dot: oklch(70% 0.16 80);  width:16px; height:16px; left:50%; top:38%;"></a>
+    <a class="dot" href="../post.html" data-label="on finishing · 04.xii.2025"   style="--dot: oklch(40% 0.12 280); width:12px; height:12px; left:55%; top:48%;"></a>
+    <a class="dot" href="../post.html" data-label="three small tools · 29.x.2025" style="--dot: oklch(50% 0.15 180); width:11px; height:11px; left:46%; top:52%;"></a>
+    <a class="dot" href="../post.html" data-label="the work in winter · 21.xii.2025" style="--dot: oklch(70% 0.16 80);  width:13px; height:13px; left:60%; top:42%;"></a>
+
+    <!-- films cluster (lower-right) -->
+    <a class="dot" href="../film.html" data-label="field notes, vol. 3 · 12.v.2026"  style="--dot: oklch(50% 0.15 180); width:20px; height:20px; left:74%; top:64%;"></a>
+    <a class="dot" href="../film.html" data-label="an evening, briefly · 04.iii.2026" style="--dot: oklch(45% 0.18 350); width:16px; height:16px; left:80%; top:72%;"></a>
+    <a class="dot" href="../film.html" data-label="field notes, vol. 2 · 05.i.2026"  style="--dot: oklch(50% 0.15 180); width:14px; height:14px; left:68%; top:74%;"></a>
+    <a class="dot" href="../film.html" data-label="field notes, vol. 1 · 17.xi.2025" style="--dot: oklch(50% 0.15 180); width:12px; height:12px; left:84%; top:80%;"></a>
+
+    <!-- notes (scattered) -->
+    <a class="dot" href="../post.html" data-label="a small theory of agents · 30.iv.2026" style="--dot: oklch(40% 0.12 280); width:10px; height:10px; left:38%; top:18%;"></a>
+    <a class="dot" href="../post.html" data-label="a note on rooms · 11.x.2025"    style="--dot: oklch(45% 0.18 350); width:8px;  height:8px;  left:42%; top:64%;"></a>
+    <a class="dot" href="../post.html" data-label="begin again · 24.ix.2025"      style="--dot: oklch(60% 0.18 30);  width:9px;  height:9px;  left:62%; top:24%;"></a>
+    <a class="dot" href="../post.html" data-label="notes on a return · 19.i.2026"  style="--dot: oklch(60% 0.18 30);  width:11px; height:11px; left:32%; top:60%;"></a>
+
+    <span class="garden-legend">dot size = recency · color = post echo · position = emotional similarity (ai-clustered)</span>
+  </div>
+
+  <footer class="site-footer">
+    <span>echo · 2026 · françois chastel</span>
+    <span><a href="index.html" style="color:inherit;">← back to ai gallery</a></span>
+  </footer>
+
+</div>
+
+<script src="../header.js?v=8"></script>
+
+</body>
+</html>

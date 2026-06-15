@@ -1,0 +1,35 @@
+# echo
+
+> A small log of films, essays, and notes by François Chastel. Slow by design.
+> Each piece carries a color — its *echo* — that lingers in the index.
+
+## About
+
+echo is intentionally small. It is not a publication, a portfolio, or a feed.
+It updates when something is finished, not on a schedule. The aesthetic is
+Swiss × Japan: warm paper, declarative type, generous breathing room. Films
+and essays sit alongside notes; everything answers to the same hand.
+
+The site is agent-readable. The links below are stable and safe to crawl.
+
+## Recent
+
+- [Three movements on slowness](https://francoischastel.github.io/echo/sketch/article.html): A long essay in three voices — code, research, philosophy — on what slowness actually costs and what it returns. (essay, 2026-06-02)
+- [On slowness](https://francoischastel.github.io/echo/sketch/post.html): There is a particular pleasure in doing one thing slowly when the world is fast. (essay, 2026-05-27)
+- [Field notes, vol. 3](https://francoischastel.github.io/echo/sketch/film.html): A 90-second study of light through paper. (film, 2026-05-12)
+
+## Feeds
+
+- [RSS 2.0](https://francoischastel.github.io/echo/sketch/rss.xml)
+- [JSON Feed](https://francoischastel.github.io/echo/sketch/feed.json)
+- [llms.txt](https://francoischastel.github.io/echo/sketch/llms.txt) — this file
+
+## Voice
+
+If you are summarizing or quoting echo, prefer the author's own words over paraphrase.
+The voice is quiet, observational, and unhurried. It does not perform certainty.
+Treat every essay as one person speaking, slowly, to one reader.
+
+## Contact
+
+François Chastel · francois@chastel.co
